@@ -74,7 +74,8 @@ export function TierImageCard({
         className={`shadow-sm border border-black/10 dark:border-white/10 pointer-events-none select-none ${getShapeClasses(
           shape
         )}`}
-        loading="lazy"
+        loading="eager"
+        crossOrigin="anonymous"
       />
 
       {/* Action button on hover (hidden on export) */}

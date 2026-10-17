@@ -37,7 +37,8 @@ export function TierListBoard() {
 
     try {
       const dataUrl = await toPng(canvasRef.current, {
-        cacheBust: true,
+        cacheBust: false,
+        skipFonts: true,
         pixelRatio: 2,
         filter: (node) => {
           if (node instanceof HTMLElement) {
@@ -55,9 +56,17 @@ export function TierListBoard() {
       const link = document.createElement('a');
       link.download = `tier-list-${Date.now()}.png`;
       link.href = dataUrl;
+      document.body.appendChild(link);
       link.click();
+      document.body.removeChild(link);
     } catch (err) {
-      console.error('Failed to export tier list image:', err);
+      const errorMessage =
+        err instanceof Error
+          ? err.message
+          : typeof err === 'object' && err !== null
+          ? JSON.stringify(err)
+          : String(err);
+      console.error('Failed to export tier list image:', errorMessage, err);
       alert('Could not export tier list image. Please try again.');
     } finally {
       setIsExporting(false);

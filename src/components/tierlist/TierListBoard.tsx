@@ -2,6 +2,8 @@
 
 import React, { useRef, useState } from 'react';
 import { useTierListState } from './useTierListState';
+import { AppHeader } from './AppHeader';
+import { AppFooter } from './AppFooter';
 import { HeaderSection } from './HeaderSection';
 import { Toolbar } from './Toolbar';
 import { TierListCanvas } from './TierListCanvas';
@@ -30,6 +32,7 @@ export function TierListBoard() {
   const canvasRef = useRef<HTMLDivElement>(null);
   const [isResetDialogOpen, setIsResetDialogOpen] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
+  const [isPresentationMode, setIsPresentationMode] = useState(false);
 
   const handleExport = async () => {
     if (!canvasRef.current || isExporting) return;
@@ -74,7 +77,17 @@ export function TierListBoard() {
   };
 
   return (
-    <div className="w-full max-w-5xl mx-auto px-4 py-8 sm:py-12 flex flex-col">
+    <div
+      className={`w-full mx-auto px-4 py-8 sm:py-12 flex flex-col flex-1 transition-all duration-300 ease-in-out ${
+        isPresentationMode ? 'max-w-[96vw]' : 'max-w-5xl'
+      }`}
+    >
+      {/* Top Application Header */}
+      <AppHeader
+        isPresentationMode={isPresentationMode}
+        onTogglePresentationMode={() => setIsPresentationMode((prev) => !prev)}
+      />
+
       {/* Header section: Editable Title & Description */}
       <HeaderSection
         title={state.title}
@@ -126,6 +139,9 @@ export function TierListBoard() {
         onDeleteImage={deletePoolImage}
         onDropImage={moveImage}
       />
+
+      {/* Application Footer */}
+      <AppFooter />
 
       {/* Confirmation Modal for Reset Actions */}
       <ConfirmDialog
